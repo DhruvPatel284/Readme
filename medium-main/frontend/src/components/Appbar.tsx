@@ -124,6 +124,7 @@ export const Appbar = () => {
                     to='/myblogs'
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition duration-150 ease-in-out"
                     role="menuitem"
+                    onClick={()=>{navigate('/myblogs');}}
                   >
                     My Blogs
                   </Link>

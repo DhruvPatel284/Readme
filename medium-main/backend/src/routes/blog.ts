@@ -124,27 +124,36 @@ blogRouter.get('/userid', async(c) => {
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate())
-    const { userId } = await c.req.json();
 
-    const blogs = await prisma.blog.findMany({
-      where: {
-        authorId: userId,
-      },
-      select: {
-        content: true,
-        title: true,
-        id: true,
-        author: {
-          select: {
-            name: true,
+    try {
+        const token = c.req.header("authorization") || ""; 
+        const user = await verify(token,c.env.JWT_SECRET);
+    
+        const userId = user.id;
+    
+        const blogs = await prisma.blog.findMany({
+          where: {
+            authorId: userId,
           },
-        },
-      },
-    });
-
-	return c.json({
-        blogs
-    })
+          select: {
+            content: true,
+            title: true,
+            id: true,
+            author: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        });
+    
+        return c.json({
+          blogs,
+        });
+      } catch (error) {
+        console.error('Error fetching user blogs:', error);
+        return c.status(500);
+      }
 })
 
 
