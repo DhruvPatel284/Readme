@@ -190,8 +190,42 @@ blogRouter.get('/:id', async (c) => {
             message:"Error While fetching blog post"
         })
     }
-
-
- 
 })
 
+blogRouter.post('/blogDelete', async (c) => {
+    try {
+        // Parse the request body
+        const body = await c.req.json();
+
+        // Initialize Prisma Client
+        const prisma = new PrismaClient({
+            datasources: {
+                db: {
+                    url: c.env.DATABASE_URL,
+                },
+            },
+        }).$extends(withAccelerate());
+
+        console.log(body);
+
+        // Delete the blog from the database
+        const blog = await prisma.blog.delete({
+            where: {
+                id: body.id,
+            },
+        });
+
+        // Return success response
+        return c.json({
+            message: "Blog deleted successfully",
+            blog,
+        });
+
+    } catch (error:any) {
+        console.error('Error deleting blog:', error);
+        return c.json({
+            message: "Error deleting blog",
+            error: error.message,
+        }, { status: 500 });
+    }
+});
