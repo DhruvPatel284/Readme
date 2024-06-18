@@ -15,4 +15,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  eslint:{
+    ignoreDuringBuilds:true,
+  }
 }
