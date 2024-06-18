@@ -1,6 +1,6 @@
-# Medium Clone Blogging Website
+# Readme Blogging Website
 
-Welcome to the Medium Clone Blogging Website! This project is a clone of Medium, designed to provide a platform for users to share and discover articles. The project is built with modern technologies and is deployed on various cloud services.
+Welcome to Readme! This project is a blogging platform designed to provide a space for users to share and discover articles, similar to Medium. The project is built with modern technologies and is deployed on various cloud services.
 
 ## Features
 
@@ -65,5 +65,5 @@ To run this project locally, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/medium-clone.git
-   cd medium-clone
+   git clone https://github.com/yourusername/readme.git
+   cd readme
