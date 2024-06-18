@@ -1,3 +1,4 @@
+
 // import { Appbar } from "./Appbar"
 // import { Blog } from "../hooks"
 // import { Avatar } from "./BlogCard"
@@ -61,7 +62,7 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
                     <div className="text-slate-500 pt-2">
                         Post on 2nd December 2023
                     </div>
-                    <div className="pt-4">
+                    <div className="pt-4 whitespace-break-spaces">
                         {blog.content}
                     </div>
                 </div>
@@ -86,5 +87,6 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
                 
             </div>
         </div>
+        <div className="h-[50px]"></div>
     </div>
 }
