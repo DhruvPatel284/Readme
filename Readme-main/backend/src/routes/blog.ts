@@ -38,31 +38,38 @@ blogRouter.use("/*", async (c,next) =>{
 
 
 blogRouter.post('/',async (c) => {
-    const body = await c.req.json();
-    const { success } =  createBlogInput.safeParse(body);
-    if(!success){
-       c.status(411);
-       return c.json({
-        message:"Inputs not correct"
-       })
-    }
-
-    const authorId = c.get("userId");
-    const prisma = new PrismaClient({
-        datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate())
-    
-    const blog = await prisma.blog.create({
-        data: {
-             title: body.title,
-             content: body.content,
-             authorId: Number(authorId)
-        }
-    })
-
-    return c.json({
-        id: blog.id
-    })
+   try {
+     const body = await c.req.json();
+     const { success } =  createBlogInput.safeParse(body);
+     if(!success){
+        c.status(411);
+        return c.json({
+         message:"Inputs not correct"
+        })
+     }
+ 
+     const authorId = c.get("userId");
+     const prisma = new PrismaClient({
+         datasourceUrl: c.env.DATABASE_URL,
+     }).$extends(withAccelerate())
+     
+     const blog = await prisma.blog.create({
+         data: {
+              title: body.title,
+              content: body.content,
+              authorId: Number(authorId)
+         }
+     })
+ 
+     return c.json({
+         id: blog.id
+     })
+   } catch (error) {
+      console.log(error)
+      return c.json({
+        error
+      })
+   }
 
 })
 
@@ -107,6 +114,7 @@ blogRouter.get('/bulk', async(c) => {
             content:true,
             title:true,
             id:true,
+            publishedDate:true,
             author:{
                 select:{
                     name:true
@@ -139,6 +147,7 @@ blogRouter.get('/userid', async(c) => {
             content: true,
             title: true,
             id: true,
+            publishedDate:true,
             author: {
               select: {
                 name: true,
@@ -173,6 +182,7 @@ blogRouter.get('/:id', async (c) => {
                 id:true,
                 title: true,
                 content: true,
+                publishedDate:true,
                 author:{
                     select:{
                         name:true

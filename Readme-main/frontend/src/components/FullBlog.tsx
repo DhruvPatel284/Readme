@@ -50,6 +50,15 @@ import { Blog } from "../hooks"
 import { Appbar } from "./Appbar"
 import { Avatar } from "./BlogCard"
 
+const formatDate = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    };
+    return date.toLocaleDateString('en-GB', options);
+};
+
 export const FullBlog = ({ blog }: {blog: Blog}) => {
     return <div>
         <Appbar />
@@ -60,7 +69,7 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
                         {blog.title}
                     </div>
                     <div className="text-slate-500 pt-2">
-                        Post on 2nd December 2023
+                       {formatDate(blog.publishedDate)}
                     </div>
                     <div className="pt-4 whitespace-break-spaces">
                         {blog.content}
