@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import { Appbar } from '../components/Appbar';
 
@@ -35,7 +34,7 @@ export const Homepage = () => {
           
           {isUserSignedIn() ? (
             <button
-              className="bg-blue-600 text-white hover:bg-blue-700 font-bold w-[30%] rounded px-6 py-2 "
+              className="bg-blue-600 text-white hover:bg-blue-700 font-bold rounded-full md:w-[30%] md:rounded px-6 py-2 "
               onClick={handleViewMoreClick}
             >
               View more
