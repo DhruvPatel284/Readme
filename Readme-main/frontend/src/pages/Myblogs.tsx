@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Appbar } from "../components/Appbar"
 import { BlogCard } from "../components/BlogCard"
 import { BlogSkeleton } from "../components/BlogSkeleton";
-import { useUserBlogs } from '../hooks';
+import { Blog, useUserBlogs } from '../hooks';
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { updateBlogInput } from "@dhruv156328/medium-common";
 
 interface BlogCardProps {
   id: number;
@@ -27,8 +28,24 @@ const formatDate = (date: string | Date): string => {
 
 
 const Myblogs = () => {
-    const { loading, blogs } = useUserBlogs();
-    const [deleted, setDeleted] = useState<number[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [deleted, setDeleted] = useState<number[]>([]);
+  const [editBlog, setEditBlog] = useState<Blog | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+      axios.get(`${BACKEND_URL}/api/v1/blog/userid`, {
+          headers: {
+              Authorization: localStorage.getItem("token")
+          }
+      })
+          .then(response => {
+              setBlogs(response.data.blogs);
+              setLoading(false);
+          })
+  }, [])
+
     const deleteHandler = async (id: number) => {
         try {
           const token = localStorage.getItem("token"); // Get the token from local storage
@@ -49,8 +66,24 @@ const Myblogs = () => {
           alert('Error deleting blog');
         }
       };
-
-    if (loading) {
+      const handleUpdate = async () => {
+        if (editBlog) {
+          try {
+            console.log(editBlog)
+            await axios.post(`${BACKEND_URL}/api/v1/blog/updateBlog`, editBlog, {
+              headers: {
+                  Authorization: localStorage.getItem("token")
+              }
+          });            
+          setBlogs(blogs.map<Blog>(blog => blog.id === editBlog.id ? editBlog : blog));
+            setEditBlog(null);
+            setIsUpdating(false);
+          } catch (error) {
+            console.error("Error updating flashcard:", error);
+          }
+        }
+      }
+      if (loading) {
         return <div>
             <Appbar /> 
             <div  className="flex justify-center">
@@ -92,7 +125,7 @@ const Myblogs = () => {
                           </div>
                           <div>
                               <button
-                              className="h-[10px]  font-semibold md:py-2 md:px-4 rounded  transition duration-300 ease-in-out transform hover:-translate-y-1 mt-2"
+                              className="h-[10px] text-xl text-red-600 font-semibold md:py-2 md:px-4 rounded  transition duration-300 ease-in-out transform hover:-translate-y-1 mt-2"
                               onClick={() => deleteHandler(blog.id)}
                               >
                                 Delete 
@@ -107,27 +140,52 @@ const Myblogs = () => {
                         <div className="text-md font-thin">
                             {blog.content.slice(0,200) + "..."}
                         </div>
-                        <div className=" text-slate-500 text-sm font-thin pt-4">
-                            { `${Math.ceil(blog.content.length/100)} minute(s) 
-                            read` }
+                        <div onClick={() => {
+                          setIsUpdating(true);
+                          setEditBlog(blog);
+                        }} className="pt-4 font-semibold text-xl cursor-pointer text-blue-700 md:py-2  rounded  transition duration-300 ease-in-out transform hover:-translate-y-1">
+                            Update
                         </div>
                   </div>
-                {/* <BlogCard
-                  id={blog.id}
-                  authorName={blog.author.name || "Anonymous"}
-                  title={blog.title}
-                  content={blog.content}
-                  publishedDate={"2nd Feb 2024"}
-                /> */}
-                {/* <button
-                  className="h-[10px]  font-semibold md:py-2 md:px-4 rounded  transition duration-300 ease-in-out transform hover:-translate-y-1 mt-2"
-                  onClick={() => deleteHandler(blog.id)}
-                >
-                   Delete 
-                </button> */}
+                
               </div>
             ))}
             </div>
+            {isUpdating && editBlog && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center p-4 sm:p-8">
+        <div className="bg-green-500 p-4 sm:p-8 rounded-lg w-full sm:w-1/3 md:w-1/2 lg:w-1/3">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">Update Flashcard</h2>
+          <input
+            type="text"
+            value={editBlog.title}
+            onChange={(e) => setEditBlog({ ...editBlog, title: e.target.value })}
+            className="border p-2 mb-4 w-full rounded-md"
+            placeholder="Question"
+          />
+          <textarea
+            value={editBlog.content}
+            onChange={(e) => setEditBlog({ ...editBlog, content: e.target.value })}
+            className="border p-2 mb-4 w-full rounded-md"
+            placeholder="Answer"
+          />
+          <div className="flex justify-end space-x-2">
+            <button
+              onClick={() => setIsUpdating(false)}
+              className="bg-gray-500 text-white px-4 py-2 rounded-md"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleUpdate}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      )}
         </div>
     </div>
 }

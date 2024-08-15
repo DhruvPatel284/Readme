@@ -239,3 +239,38 @@ blogRouter.post('/blogDelete', async (c) => {
         }, { status: 500 });
     }
 });
+
+blogRouter.post('/updateBlog', async (c) => {
+    try {
+        const body = await c.req.json();
+
+        const prisma = new PrismaClient({
+            datasources: {
+                db: {
+                    url: c.env.DATABASE_URL,
+                },
+            },
+        }).$extends(withAccelerate());
+
+        const blog = await prisma.blog.update({
+            where: {
+                id: body.id,  
+            },
+            data: {
+                title: body.title,  
+                content: body.content,  
+            },
+        });
+
+        return c.json({
+            message: "Blog updated successfully",
+        });
+
+    } catch (error:any) {
+        console.error('Error deleting blog:', error);
+        return c.json({
+            message: "Error deleting blog",
+            error: error.message,
+        }, { status: 500 });
+    }
+});
