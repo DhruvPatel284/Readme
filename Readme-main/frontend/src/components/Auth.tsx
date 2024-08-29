@@ -3,6 +3,9 @@ import { ChangeEvent, useState } from "react";
 import { Link , useNavigate} from "react-router-dom"
 import { BACKEND_URL } from "../config";
 import  axios  from "axios";
+import toast, { Toaster } from 'react-hot-toast';
+
+const notify = () => toast('Processing');
 
 export const Auth = ( { type }:{type:"signup" | "signin"}) =>{
     const navigate = useNavigate();
@@ -17,11 +20,12 @@ export const Auth = ( { type }:{type:"signup" | "signin"}) =>{
             const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type==="signup" ? "signup":"signin"}`,postInputs);
             const jwt =  response.data;
             localStorage.setItem("token",jwt);
+            toast.success("Loggen in");
             navigate("/blogs");
          } catch(e){
               console.log(e);
-              alert("while siging");
-         }
+              toast.error("Error while logging:-");
+        }
     }
 
     return <div className="h-screen flex justify-center flex-col">
@@ -64,6 +68,7 @@ export const Auth = ( { type }:{type:"signup" | "signin"}) =>{
                 </div>
               </div>
          </div>
+         
     </div>
 }
 
