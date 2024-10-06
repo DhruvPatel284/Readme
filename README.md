@@ -115,22 +115,27 @@ Here's a breakdown of the core structure:
    - Additionally, update the BACKEND_URL in the frontend's config.ts file for API requests:
        ```bash
         export const BACKEND_URL = "http://localhost:3000"; // Your backend URL
-5. **📝 Features in Detail**:
+---
+### **📝 Features in Detail**:
    1.**Authentication:** Built using JWT tokens. Cookies are used for maintaining the user session.
    2.**Blog Management:** Users can create blogs from their dashboard. They can view their published blogs in the "My Blogs" section.
    3.**Reading Time:** Automatically calculates the reading time of a blog based on the word count and displays it on the blog card.
    4.**Responsive Design:** The website is responsive and mobile-friendly.
 
-6. **🌐 Deployment**:
-    #### Backend (Cloudflare Worker):
+---
+### 🌐 Deployment
+#### Backend (Cloudflare Worker):
      1. Set DATABASE_URL in .env and wrangler.toml.
      2. Set JWT_SECRET in wrangler.toml.
      3. Deploy using Wrangler.
-   #### Frontend (Vercel):
+     
+#### Frontend (Vercel):
      1. Deploy the frontend to Vercel.
      2. Set BACKEND_URL in the config.ts file to point to the Cloudflare Worker URL.
+
+---
      
-6. **🤝 Contributing**:
+### **🤝 Contributing**:
 If you would like to contribute to this project, feel free to submit a pull request. For any issues, please open an issue on the GitHub repository.
 
 
