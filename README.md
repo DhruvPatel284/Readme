@@ -118,8 +118,11 @@ Here's a breakdown of the core structure:
 ---
 ### **📝 Features in Detail**:
    1.**Authentication:** Built using JWT tokens. Cookies are used for maintaining the user session.
+
    2.**Blog Management:** Users can create blogs from their dashboard. They can view their published blogs in the "My Blogs" section.
+
    3.**Reading Time:** Automatically calculates the reading time of a blog based on the word count and displays it on the blog card.
+   
    4.**Responsive Design:** The website is responsive and mobile-friendly.
 
 ---
