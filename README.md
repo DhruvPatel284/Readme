@@ -34,7 +34,7 @@ Welcome to **Readme**, a blog website where users can share their ideas and thou
 ### Frontend:
 - **React.js**: For building the user interface
 - **TypeScript**: Strongly-typed JavaScript for better development experience
-- **CSS**: Styling the components
+- **Tailwind CSS**: Styling the components
 
 ### Backend:
 - **Hono**: Lightweight framework for building web APIs
@@ -42,6 +42,8 @@ Welcome to **Readme**, a blog website where users can share their ideas and thou
 - **PostgreSQL**: The relational database used to store user and blog information
 - **Node.js**: Backend runtime for executing JavaScript code
 - **Cloudflare**: For deployment and scaling the backend services
+- **TypeScript**: Strongly-typed JavaScript for better development experience
+
 
 ## 🏗️ Project Structure
 
@@ -116,7 +118,7 @@ Here's a breakdown of the core structure:
        ```bash
         export const BACKEND_URL = "http://localhost:3000"; // Your backend URL
 ---
-### **📝 Features in Detail**:
+### **📝 Features in Details**:
    1.**Authentication:** Built using JWT tokens. Cookies are used for maintaining the user session.
 
    2.**Blog Management:** Users can create blogs from their dashboard. They can view their published blogs in the "My Blogs" section.
