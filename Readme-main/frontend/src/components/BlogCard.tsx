@@ -1,118 +1,113 @@
+'use client'
 
-// import { Link } from "react-router-dom";
-
-
-// interface BlogCardProps {
-//     id: number;
-//     authorName: string;
-//     title: string;
-//     content: string;
-//     publishedDate: string;
-// }
-// export const BlogCard = ({
-//     id,
-//     authorName,
-//     title,
-//     content,
-//     publishedDate
-// }:BlogCardProps) => {
-//     return <Link to={`/blog/${id}`}>
-//     <div className="p-4 border-b border-slate-300  mt-1 pb-4 w-screen max-w-screen-md cursor-pointer" > 
-//            <div className="flex items-center">
-//                 <Avatar name = {authorName} /> 
-//                 <div className="font-extralight pl-2 text-sm
-//                  flex justify-center flex-col ">{authorName}</div>
-//                 <div className="flex  pl-2 justify-center flex-col">
-//                     <Circle/>
-//                 </div>
-//                 <div className="pl-2 font-thin  text-sm justify-center flex-col">
-//                    {publishedDate}
-//                 </div>
-//            </div>
-//            <div className="text-xl font-semibold pt-2">
-//               {title}
-//            </div>
-//            <div className="text-md font-thin">
-//                {content.slice(0,200) + "..."}
-//            </div>
-//            <div className=" text-slate-500 text-sm font-thin pt-4">
-//                { `${Math.ceil(content.length/100)} minute(s) 
-//                read` }
-//            </div>
-//     </div>
-//     </Link>
-// }
-// export function Circle(){
-//     return <div className="h-1 w-1  rounded-full bg-slate-300">
-
-//     </div>
-// }
-// export function Avatar({ name,size ="small" } : { name: string , size ?: "small" | "big"}){
-//     return <div className={`flex justify-center bg-gray-400 rounded-full dark:bg-gray-600 ${size === "small" ? "w-6 h-6" : "w-10 h-10"} ` }>
-//     <span className={`${size === "small" ? "text-xs" : "text-xl"} m-auto font-extralight text-white dark:text-gray-300 `}>{name[0]}</span>
-// </div>
-// }
-
-
-
-
-import { Link } from "react-router-dom";
+import React from 'react'
+import { Link } from "react-router-dom"
+import { CalendarIcon, ClockIcon, TagIcon } from "lucide-react"
 
 interface BlogCardProps {
-    id: number;
-    authorName: string;
-    title: string;
-    content: string;
-    publishedDate: Date;
+  id: number
+  authorName: string
+  title: string
+  content: string
+  publishedDate: Date
+  tags?: string[]
+  isDarkMode?: boolean
 }
 
-const formatDate = (date: Date): string => {
-    const options: Intl.DateTimeFormatOptions = {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-    };
-    return date.toLocaleDateString('en-GB', options);
-};
-
-export const BlogCard = ({
-    id,
-    authorName,
-    title,
-    content,
-    publishedDate
-}: BlogCardProps) => {
-    return <Link to={`/blog/${id}`}>
-        <div className="p-4 border-b border-slate-300 mt-1 pb-4 w-screen max-w-screen-md cursor-pointer">
-            <div className="flex items-center">
-                <Avatar name={authorName} />
-                <div className="font-extralight pl-2 text-sm flex justify-center flex-col">{authorName}</div>
-                <div className="flex pl-2 justify-center flex-col">
-                    <Circle />
-                </div>
-                <div className="pl-2 font-thin text-sm justify-center flex-col">
-                    {formatDate(publishedDate)}
-                </div>
-            </div>
-            <div className="text-xl font-semibold pt-2">
-                {title}
-            </div>
-            <div className="text-md font-thin">
-                {content.slice(0, 200) + "..."}
-            </div>
-            <div className="text-slate-500 text-sm font-thin pt-4">
-                {`${Math.ceil(content.length / 100)} minute(s) read`}
-            </div>
-        </div>
-    </Link>
+const formatDate = (date: string | Date): string => {
+  const dateObj = typeof date === "string" ? new Date(date) : date
+  return new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }).format(dateObj)
 }
 
-export function Circle() {
-    return <div className="h-1 w-1 rounded-full bg-slate-300"></div>;
+const estimateReadTime = (content: string): number => {
+  const wordsPerMinute = 200
+  const wordCount = content.split(/\s+/).length
+  return Math.ceil(wordCount / wordsPerMinute)
 }
 
-export function Avatar({ name, size = "small" }: { name: string, size?: "small" | "big" }) {
-    return <div className={`flex justify-center bg-gray-400 rounded-full dark:bg-gray-600 ${size === "small" ? "w-6 h-6" : "w-10 h-10"}`}>
-        <span className={`${size === "small" ? "text-xs" : "text-xl"} m-auto font-extralight text-white dark:text-gray-300`}>{name[0]}</span>
+function Avatar({ name, isDarkMode }: { name: string; isDarkMode?: boolean }) {
+  return (
+    <div className={`w-12 h-12 rounded-full border-2 ${
+      isDarkMode 
+        ? 'border-purple-400 bg-purple-900 text-purple-100' 
+        : 'border-indigo-400 bg-indigo-100 text-indigo-900'
+    } flex items-center justify-center transition-colors duration-300`}>
+      <span className="text-lg font-bold">{name[0].toUpperCase()}</span>
     </div>
+  )
+}
+
+function Badge({ children, isDarkMode }: { children: React.ReactNode; isDarkMode?: boolean }) {
+  return (
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+      isDarkMode 
+        ? 'bg-purple-900 text-purple-100' 
+        : 'bg-indigo-100 text-indigo-800'
+    } transition-colors duration-300`}>
+      <TagIcon className="w-3 h-3 mr-1" />
+      {children}
+    </span>
+  )
+}
+
+export function BlogCard({
+  id,
+  authorName,
+  title,
+  content,
+  publishedDate,
+  tags = [],
+  isDarkMode = true
+}: BlogCardProps) {
+  const readTime = estimateReadTime(content)
+
+  return (
+    <Link to={`/blog/${id}`} className="block">
+      <div className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 ${
+        isDarkMode 
+          ? 'bg-gray-800 text-gray-100' 
+          : 'bg-white text-gray-900'
+      }`}>
+        <div className="p-6">
+          <div className="flex items-center space-x-4 mb-4">
+            <Avatar name={authorName} isDarkMode={isDarkMode} />
+            <div>
+              <h3 className={`text-lg font-semibold ${
+                isDarkMode ? 'text-purple-300' : 'text-indigo-700'
+              }`}>{authorName}</h3>
+              <div className={`flex items-center text-sm ${
+                isDarkMode ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                <CalendarIcon className="mr-1 h-3 w-3" />
+                {formatDate(publishedDate)}
+              </div>
+            </div>
+          </div>
+          <h2 className={`text-2xl font-bold mb-2 line-clamp-2 ${
+            isDarkMode ? 'text-purple-100' : 'text-indigo-900'
+          }`}>{title}</h2>
+          <p className={`mb-4 line-clamp-3 ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>{content}</p>
+          <div className="flex justify-between items-center">
+            <div className={`flex items-center text-sm ${
+              isDarkMode ? 'text-gray-400' : 'text-gray-600'
+            }`}>
+              <ClockIcon className="mr-1 h-4 w-4" />
+              {readTime} min read
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag, index) => (
+                <Badge key={index} isDarkMode={isDarkMode}>{tag}</Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
 }

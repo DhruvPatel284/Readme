@@ -1,101 +1,143 @@
-
-// import { Avatar } from "./BlogCard"
-// import { Link } from "react-router-dom"
-
-// export const Appbar = () => {
-//     return <div className="shadow-md  flex justify-between items-center h-[70px] px-10 py-4 ">
-//         <Link to={'/blogs'} className=" text-2xl font-bold   cursor-pointer">
-//                 Medium
-//         </Link>
-//         <div>
-//             <Link to={`/publish`}>
-//                 <button type="button" className="mr-4 text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 ">New</button>
-//             </Link>
-
-//             <Avatar size={"big"} name="hhh" />
-//         </div>
-//     </div>
-// }
-import  { useState, useEffect } from 'react';
-import { Avatar } from "./BlogCard";
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
+import toast from 'react-hot-toast';
+import { PenSquare, User, LogOut, Sun, Moon } from 'lucide-react';
+
 interface MyToken {
   name: string;
-  username:string;
+  username: string;
   id: string;
 }
+
+function Avatar({ name, isDarkMode }: { name: string; isDarkMode: boolean }) {
+  return (
+    <div className={`w-10 h-10 rounded-full border-2 ${
+      isDarkMode 
+        ? 'border-purple-400 bg-purple-900 text-purple-100' 
+        : 'border-indigo-400 bg-indigo-100 text-indigo-900'
+    } flex items-center justify-center transition-all duration-300 hover:bg-opacity-80`}>
+      <span className="text-lg font-medium">{name[0].toUpperCase()}</span>
+    </div>
+  )
+}
+
 export const Appbar = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getUser = ()=>{
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-      try {
-        //@ts-ignore
-        const decodedToken = jwtDecode<MyToken>(token);
-        setUsername(decodedToken.username);
-      } catch (error) {
-        console.error('Failed to decode token', error);
+    const getUser = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        setIsLoggedIn(true);
+        try {
+          const decodedToken = jwtDecode<MyToken>(token);
+          setUsername(decodedToken.username);
+        } catch (error) {
+          console.error('Failed to decode token', error);
+        }
       }
     }
-    }
     getUser();
+
+    // Check for saved theme preference
   }, []);
+
+  useEffect(() => {
+    // Apply theme to body
+    document.body.classList.toggle('dark', isDarkMode);
+    // Save theme preference
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
   const handleLogout = () => {
+    toast.success("Logged Out!", {
+      style: {
+        background: isDarkMode ? '#4B5563' : '#ffffff',
+        color: isDarkMode ? '#E5E7EB' : '#1F2937',
+      },
+      iconTheme: {
+        primary: '#10B981',
+        secondary: isDarkMode ? '#1F2937' : '#ffffff',
+      },
+    });
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     navigate('/');
   };
 
+  
   return (
-    <nav className="p-4 w-full shadow-md shadow-slate-100">
-      <div className="container mx-auto flex items-center justify-between ">
-        <Link to="/blogs" className="text-black text-xl font-semibold items-center ml-3 flex">
-          <div className='h-[30px] mr-2'><img className=' rounded h-[30px]' src="../images/articlenew.jpg" alt="" /></div>
-          <div className="text-2xl text-slate-800">
+    <nav className={`${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'} p-4 w-full shadow-lg shadow-purple-800 transition-colors duration-300`}>
+      <div className="container mx-auto flex items-center justify-between">
+        <Link to="/blogs" className="text-xl font-semibold items-center ml-3 flex">
+          <div className='h-[30px] mr-2'>
+            <img className='rounded h-[30px]' src="../images/articlenew.jpg" alt="Read-Me Logo" />
+          </div>
+          <div className={`text-2xl font-bold ${isDarkMode ? 'text-purple-300' : 'text-indigo-600'}`}>
             Read-Me
           </div>
         </Link>
         <div className="flex items-center justify-center space-x-4">
+                
           {isLoggedIn ? (
             <>
               <Link
                 to="/publish"
-                className="mr-4  text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 transition duration-150 ease-in-out"
+                className={`mr-4 font-medium rounded-full text-sm px-5 py-2.5 text-center transition duration-300 ease-in-out flex items-center ${
+                  isDarkMode 
+                    ? 'text-gray-900 bg-purple-400 hover:bg-purple-500' 
+                    : 'text-white bg-indigo-600 hover:bg-indigo-700'
+                }`}
               >
+                <PenSquare className="w-4 h-4 mr-2" />
                 New
               </Link>
-              <div className="">
-                <button onClick={toggleDropdown} className="focus:outline-none mb-2">
-                  <Avatar size={"big"}  name={username}/>
+              <div className="relative">
+                <button 
+                  onClick={toggleDropdown} 
+                  className="focus:outline-none "
+                  aria-haspopup="true"
+                  aria-expanded={dropdownVisible}
+                >
+                  <Avatar name={username} isDarkMode={isDarkMode} />
                 </button>
                 {dropdownVisible && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-transform transform duration-200 origin-top-right">
+                  <div className={`absolute  right-0 mt-2 w-48 rounded-md shadow-lg ${
+                    isDarkMode ? 'bg-gray-800' : 'bg-white'
+                  } ring-1 ring-black ring-opacity-5 transition-all duration-200 origin-top-right`}>
                     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                       <Link
                         to='/myblogs'
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition duration-150 ease-in-out"
+                        className={`flex items-center px-4 py-2 text-sm ${
+                          isDarkMode 
+                            ? 'text-gray-300 hover:bg-gray-700 hover:text-white' 
+                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                        } transition duration-150 ease-in-out`}
                         role="menuitem"
-                        onClick={() => { navigate('/myblogs'); }}
+                        onClick={() => { navigate('/myblogs'); setDropdownVisible(false); }}
                       >
+                        <User className="w-4 h-4 mr-2" />
                         My Blogs
                       </Link>
                       <button
-                        onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition duration-150 ease-in-out"
+                        onClick={() => { handleLogout(); setDropdownVisible(false); }}
+                        className={`flex items-center w-full text-left px-4 py-2 text-sm ${
+                          isDarkMode 
+                            ? 'text-gray-300 hover:bg-gray-700 hover:text-white' 
+                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                        } transition duration-150 ease-in-out`}
                         role="menuitem"
                       >
+                        <LogOut className="w-4 h-4 mr-2" />
                         Log Out
                       </button>
                     </div>
@@ -106,7 +148,11 @@ export const Appbar = () => {
           ) : (
             <Link
               to="/signin"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 transition duration-150 ease-in-out"
+              className={`font-medium rounded-full text-sm px-5 py-2.5 text-center transition duration-300 ease-in-out ${
+                isDarkMode 
+                  ? 'text-gray-900 bg-purple-400 hover:bg-purple-500' 
+                  : 'text-white bg-indigo-600 hover:bg-indigo-700'
+              }`}
             >
               Log in
             </Link>
@@ -116,102 +162,3 @@ export const Appbar = () => {
     </nav>
   );
 };
-// import  { useState, useEffect } from 'react';
-// import { Avatar } from "./BlogCard";
-// import { Link, useNavigate } from "react-router-dom";
-// import {jwtDecode} from "jwt-decode"
-// interface MyToken {
-//   name: string;
-//   username:string;
-//   id: string;
-// }
-// export const Appbar = () => {
-//   const [dropdownVisible, setDropdownVisible] = useState(false);
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-//   const [username, setUsername] = useState('');
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const getUser = ()=>{
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       setIsLoggedIn(true);
-//       try {
-//         //@ts-ignore
-//         const decodedToken = jwtDecode<MyToken>(token);
-//         setUsername(decodedToken.username);
-//       } catch (error) {
-//         console.error('Failed to decode token', error);
-//       }
-//     }
-//     }
-//     getUser();
-//   }, []);
-
-//   const toggleDropdown = () => {
-//     setDropdownVisible(!dropdownVisible);
-//   };
-
-//   const handleLogout = () => {
-//     localStorage.removeItem('token');
-//     setIsLoggedIn(false);
-//     navigate('/');
-//   };
-
-//   return (
-//     <nav className="p-4 w-full shadow-md shadow-slate-100">
-//       <div className="container mx-auto flex items-center justify-between ">
-//         <div className="text-black text-xl font-semibold ml-5">
-//           <Link to='/blogs' className="hover:text-gray-300">
-//             Read-Me
-//           </Link>
-//         </div>
-//         <div className="flex items-center justify-center space-x-4">
-//           {isLoggedIn ? (
-//             <>
-//               <Link
-//                 to="/publish"
-//                 className="mr-4  text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 transition duration-150 ease-in-out"
-//               >
-//                 New
-//               </Link>
-//               <div className="">
-//                 <button onClick={toggleDropdown} className="focus:outline-none mb-2">
-//                   <Avatar size={"big"}  name={username}/>
-//                 </button>
-//                 {dropdownVisible && (
-//                   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition-transform transform duration-200 origin-top-right">
-//                     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-//                       <Link
-//                         to='/myblogs'
-//                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition duration-150 ease-in-out"
-//                         role="menuitem"
-//                         onClick={() => { navigate('/myblogs'); }}
-//                       >
-//                         My Blogs
-//                       </Link>
-//                       <button
-//                         onClick={handleLogout}
-//                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition duration-150 ease-in-out"
-//                         role="menuitem"
-//                       >
-//                         Log Out
-//                       </button>
-//                     </div>
-//                   </div>
-//                 )}
-//               </div>
-//             </>
-//           ) : (
-//             <Link
-//               to="/signin"
-//               className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 transition duration-150 ease-in-out"
-//             >
-//               Log in
-//             </Link>
-//           )}
-//         </div>
-//       </div>
-//     </nav>
-//   );
-// };

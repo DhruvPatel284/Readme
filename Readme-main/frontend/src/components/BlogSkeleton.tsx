@@ -1,4 +1,3 @@
-import { Circle } from "./BlogCard"
 
 export const BlogSkeleton = () => {
     return <div role="status" className="animate-pulse">
@@ -8,7 +7,6 @@ export const BlogSkeleton = () => {
                 <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
                 <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
                 <div className="flex justify-center flex-col pl-2 flex justify-center flex-col">
-                    <Circle />
                 </div>
                 <div className="pl-2 font-thin text-slate-500 text-sm flex justify-center flex-col">
                     <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
