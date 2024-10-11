@@ -13,6 +13,7 @@
     "@dhruv156328/medium-common": "^1.0.0",
     "@huggingface/inference": "^2.8.0",
     "axios": "^1.6.8",
+    "framer-motion": "^11.11.8",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "langchain": "^0.3.2",

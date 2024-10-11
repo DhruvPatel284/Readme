@@ -4,7 +4,6 @@ import { Blog, useUserBlogs } from '../hooks';
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { updateBlogInput } from "@dhruv156328/medium-common";
 import toast from "react-hot-toast";
 import { BlogSkeletons } from "./Blogs";
 
