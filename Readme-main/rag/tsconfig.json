@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@langchain/*": ["node_modules/langchain/*"]
+    },
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",

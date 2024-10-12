@@ -8,11 +8,16 @@
     "@langchain/community": "^0.3.4",
     "@langchain/core": "^0.3.8",
     "@langchain/openai": "^0.3.5",
-    "@supabase/supabase-js": "^2.45.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "hono": "^4.6.3"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240925.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "@types/node": "^22.7.5",
+    "langchain": "^0.3.2",
+    "openai": "^4.67.3",
     "wrangler": "^3.79.0"
   }
 }

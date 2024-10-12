@@ -58,7 +58,10 @@ export const Homepage = () => {
                   Interact with our AI-powered chatbot. Get answers to your questions and dive deeper into our content.
                 </p>
                 <div className="text-center">
-                  <Link to="/chatbot" className="bg-purple-500 text-black font-semibold px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                  <Link to={{
+                      pathname: '/blogs',
+                      search: '?isChatOpen=true'
+                    }} className="bg-purple-500 text-black font-semibold px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
                     Start Chatting
                   </Link>
                 </div>

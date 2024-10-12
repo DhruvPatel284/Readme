@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { Blog } from "../hooks"
 import { Appbar } from "./Appbar"
@@ -112,10 +111,8 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
     setIsDarkMode(!isDarkMode)
   }
 
-  return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      isDarkMode ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'
-    }`}>
+  return  (
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'}`}>
       <Appbar />
       <div className="flex justify-center">
         <div className="grid grid-cols-12 px-5 w-full max-w-screen-xl pt-8">
@@ -124,10 +121,7 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
               <Skeleton isDarkMode={isDarkMode} />
             ) : (
               <>
-                <div className={`text-3xl md:text-5xl font-extrabold leading-tight md:leading-snug ${
-                  isDarkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600' 
-                            : 'text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-purple-600'
-                }`}>
+                <div className={`text-3xl md:text-5xl font-extrabold leading-tight md:leading-snug ${isDarkMode ? 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600' : 'text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-purple-600'}`}>
                   {blog.title}
                 </div>
                 <div className={`pt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -153,9 +147,7 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
                       <Avatar name={blog.author.name || "Anonymous"} isDarkMode={isDarkMode} />
                     </div>
                     <div>
-                      <div className={`text-xl font-bold ${
-                        isDarkMode ? 'text-purple-200' : 'text-indigo-600'
-                      }`}>
+                      <div className={`text-xl font-bold ${isDarkMode ? 'text-purple-200' : 'text-indigo-600'}`}>
                         {blog.author.name || "Anonymous"}
                       </div>
                       <div className={`pt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -174,28 +166,14 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
       {!isChatOpen && (
         <button 
           onClick={() => setIsChatOpen(true)} 
-          className={`fixed bottom-4 right-4 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors ${
-            isDarkMode 
-              ? 'bg-purple-600 text-white hover:bg-purple-700' 
-              : 'bg-indigo-500 text-white hover:bg-indigo-600'
-          }`}
+          className={`fixed bottom-4 right-4 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors ${isDarkMode ? 'bg-black text-white hover:bg-purple-700' : 'bg-indigo-500 text-white hover:bg-indigo-600'}`}
         >
           <Send className="w-6 h-6" />
         </button>
       )}
-      <button
-        onClick={toggleDarkMode}
-        className={`fixed bottom-4 left-4 p-2 rounded-full transition-colors ${
-          isDarkMode 
-            ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
-            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-        }`}
-        aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-      >
-        {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
-      </button>
+      
     </div>
-  )
+  );
 }
 export const Skeleton = ({ isDarkMode }: ThemeProps) => {
   return (
