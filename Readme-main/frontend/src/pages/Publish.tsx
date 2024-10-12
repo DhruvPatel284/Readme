@@ -6,7 +6,8 @@ import axios from 'axios'
 import { Toaster, toast } from 'react-hot-toast'
 import { BACKEND_URL, RAG_URL } from '../config'
 import { Appbar } from '../components/Appbar'
-import JoditEditor from 'jodit-react';
+
+
 
 
 // Custom Button Component
@@ -62,8 +63,6 @@ export const Publish: React.FC = () => {
   const [content, setContent] = useState('')
   const [isPublishing, setIsPublishing] = useState(false)
   const navigate = useNavigate()
-  
-
   const handlePublish = useCallback(async () => {
     if (!title.trim() || !content.trim()) {
       toast.error('Please fill in both title and content')
@@ -122,7 +121,6 @@ export const Publish: React.FC = () => {
                     onChange={(e) => setContent(e.target.value)}
                     rows={10}
                     />
-
               </div>
               <div className="flex justify-between items-center text-sm text-purple-300">
                 <span>{wordCount} words</span>
