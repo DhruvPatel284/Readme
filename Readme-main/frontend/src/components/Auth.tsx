@@ -38,6 +38,27 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
     }
   }
 
+  async function sendGuestReq() {
+    try {
+        const guestCredentials = {
+            username: "dhruv@gmail.com",
+            password: "123456",
+        };
+        const response = await axios.post( `${BACKEND_URL}/api/v1/user/signin`, guestCredentials);
+        const token = response.data;
+        if (!response) {
+          toast.error("Error while logging in!")
+        }
+        toast.dismiss()
+        toast.success("Logged In!")
+        const jwt = response.data
+        localStorage.setItem("token", jwt)
+        navigate("/blogs")
+    } catch (e) {
+        toast.error("Login Failed");
+    }
+}
+
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-purple-700 to-indigo-900">
       <motion.div
@@ -107,6 +128,12 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
           >
             {type === "signup" ? "Create Account" : "Sign In"}
           </motion.button>
+           <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={sendGuestReq}
+            className="w-full text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-3 transition-all duration-300 ease-in-out"
+          >Login as Guest</motion.button>
         </div>
       </motion.div>
     </div>
