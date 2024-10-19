@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Blog } from "../hooks"
 import { Appbar } from "./Appbar"
 import { Send, X, Sun, Moon } from "lucide-react"
@@ -58,7 +58,7 @@ const Chatbot = ({ isOpen, setIsOpen, isDarkMode }: { isOpen: boolean; setIsOpen
         <div className="flex-grow overflow-auto p-4">
           {messages.map((message, index) => (
             <div key={index} className={`mb-4 ${message.isUser ? 'text-right' : 'text-left'}`}>
-              <span className={`inline-block p-3 rounded-lg ${
+              <span className={`inline-block p-3 whitespace-pre-wrap rounded-lg ${
                 message.isUser 
                   ? (isDarkMode ? 'bg-purple-600 text-white' : 'bg-indigo-500 text-white')
                   : (isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-gray-200 text-gray-800')
@@ -112,7 +112,7 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
   }
 
   return  (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'}`}>
       <Appbar />
       <div className="flex justify-center">
         <div className="grid grid-cols-12 px-5 w-full max-w-screen-xl pt-8">
@@ -162,24 +162,12 @@ export const FullBlog = ({ blog }: {blog: Blog}) => {
         </div>
       </div>
       <div className="h-[50px]"></div>
-      <Chatbot isOpen={isChatOpen} setIsOpen={setIsChatOpen} isDarkMode={isDarkMode} />
-      {!isChatOpen && (
-        <button 
-          onClick={() => setIsChatOpen(true)} 
-          className={`fixed bottom-4 right-4 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors ${isDarkMode ? 'bg-black text-white hover:bg-purple-700' : 'bg-indigo-500 text-white hover:bg-indigo-600'}`}
-        >
-          <Send className="w-6 h-6" />
-        </button>
-      )}
-      
     </div>
   );
 }
-export const Skeleton = ({ isDarkMode }: ThemeProps) => {
+export const Skeleton = React.memo(({ isDarkMode }: ThemeProps) => {
   return (
-
     <div className={`animate-pulse h-screen w-screen flex flex-col justify-center items-center ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      
       <div className="mb-6 w-full max-w-screen-lg">
         <div className={`h-10 md:h-14 rounded-lg ${isDarkMode ? 'bg-purple-700' : 'bg-rose-300'}`}></div>
       </div>
@@ -200,4 +188,4 @@ export const Skeleton = ({ isDarkMode }: ThemeProps) => {
       </div>
     </div>
   );
-};
+});

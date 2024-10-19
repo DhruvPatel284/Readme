@@ -123,7 +123,7 @@ const Myblogs = () => {
                     </div>
                     <div>
                     <button
-                    className="h-[30px] w-[90px]  md:text-md flex  justify-center items-center text-white font-semibold md:py-2 md:px-4 rounded transition duration-300 ease-in-out transform hover:scale-105 mt-2 bg-gradient-to-r from-red-400 to-red-700 shadow-md"
+                    className="h-[30px] w-[90px]  md:text-md flex  justify-center items-center text-white font-semibold md:py-2 md:px-4 rounded transition duration-300 ease-in-out transform hover:scale-105 mt-2 bg-gradient-to-r from-red-400 to-orange-700 shadow-md"
                     onClick={() => deleteHandler(blog.id)}
                   >
                     Delete
@@ -146,7 +146,7 @@ const Myblogs = () => {
                       setIsUpdating(true);
                       setEditBlog(blog);
                     }}
-                    className=" p-4 rounded-lg h-[30px] flex justify-center items-center mt-4 font-semibold md:text-md  text-white md:py-2  transition duration-300 ease-in-out transform hover:scale-105 bg-gradient-to-r from-purple-500 to-purple-800 shadow-md"
+                    className=" p-4 rounded-lg h-[30px] flex justify-center items-center mt-4 font-semibold md:text-md  text-white md:py-2  transition duration-300 ease-in-out transform hover:scale-105 bg-gradient-to-r from-purple-600 to-purple-800 shadow-md"
                   >
                     Update
                   </button>

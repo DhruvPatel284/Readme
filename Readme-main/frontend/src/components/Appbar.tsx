@@ -9,6 +9,7 @@ interface MyToken {
   username: string;
   id: string;
 }
+const isEdge = /Edg/.test(navigator.userAgent)
 
 function Avatar({ name, isDarkMode }: { name: string; isDarkMode: boolean }) {
   return (
@@ -78,7 +79,7 @@ export const Appbar = () => {
   return (
     <nav className={`${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'} p-4 w-full shadow-lg shadow-purple-800 transition-colors duration-300`}>
       <div className="container mx-auto flex items-center justify-between">
-        <Link to="/blogs" className="text-xl font-semibold items-center ml-3 flex">
+        <Link to="/blogs" className={`text-xl font-semibold items-center ${isEdge ? 'ml-3' : 'ml-[5%]' } flex`}>
           <div className='h-[30px] mr-2'>
             <img className='rounded h-[30px]' src="../images/articlenew.jpg" alt="Read-Me Logo" />
           </div>
@@ -86,7 +87,7 @@ export const Appbar = () => {
             Read-Me
           </div>
         </Link>
-        <div className="flex items-center justify-center space-x-4">
+        <div className={`flex items-center justify-center space-x-4 ${isEdge ? '' : 'md:mr-[3%]' }`}>
                 
           {isLoggedIn ? (
             <>

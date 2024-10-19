@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Appbar } from '../components/Appbar';
 import { BookOpen, Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
+import { jwtDecode } from 'jwt-decode';
 
 
 export const Homepage = () => {
@@ -43,7 +44,7 @@ export const Homepage = () => {
                   Explore our collection of articles on various topics. Stay informed and inspired with our latest posts.
                 </p>
                 <div className="text-center">
-                  <Link to="/blogs" className="bg-purple-500 font-semibold text-black px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                  <Link to={ isUserSignedIn() ? '/blogs' : '/signin'} className="bg-purple-500 font-semibold text-black px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
                     Visit Blog
                   </Link>
                 </div>
@@ -58,10 +59,9 @@ export const Homepage = () => {
                   Interact with our AI-powered chatbot. Get answers to your questions and dive deeper into our content.
                 </p>
                 <div className="text-center">
-                  <Link to={{
-                      pathname: '/blogs',
-                      search: '?isChatOpen=true'
-                    }} className="bg-purple-500 text-black font-semibold px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                  <Link to= {{pathname: isUserSignedIn()  ? '/blogs' : '/signin',
+                        search: '?isChatOpen=true'}} 
+                       className="bg-purple-500 text-black font-semibold px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
                     Start Chatting
                   </Link>
                 </div>

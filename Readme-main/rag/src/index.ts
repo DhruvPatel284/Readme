@@ -92,7 +92,7 @@ app.post('/question', async (c) => {
     //   context: {context}
     //   question: {question}
     //   answer: `;
-    const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question based on the context provided. Your answer should summarize or define the topic based on the context.
+    const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question based on the context provided. Your answer should summarize or define the topic based on the context if you do not find the answer in the content than give content as per your knowledge.
     context: {context}
     question: {question}
     answer: `;

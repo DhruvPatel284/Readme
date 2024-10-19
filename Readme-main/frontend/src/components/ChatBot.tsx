@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -41,25 +40,44 @@ export const Chatbot: React.FC<ChatbotProps> = ({
     e.preventDefault();
     if (inputValue.trim()) {
       const newMessages = [...messages, { text: inputValue, isUser: true }];
-      setMessages(newMessages);
+      setMessages([...newMessages, { text: 'Gyani is thinking...', isUser: false }]);
       setInputValue('');
 
       try {
-        const response = await axios.post(`${RAG_URL}/question`,{inputValue})
+        const response = await axios.post(`${RAG_URL}/question`, { inputValue });
 
-        if (!response) {
+        if (response.status !== 200) {
           throw new Error('Network response was not ok');
         }
 
-        const data = await response.data.response;
-        const botMessage = data;
-
-        setMessages([...newMessages, { text: botMessage, isUser: false }]);
+        const botMessage = response.data.response;
+        setMessages([
+          ...newMessages,
+          { text: botMessage, isUser: false }
+        ]);
       } catch (error) {
         console.error('Error fetching response:', error);
-        setMessages([...newMessages, { text: 'Sorry, something went wrong.', isUser: false }]);
+        setMessages([
+          ...newMessages,
+          { text: 'Sorry, something went wrong.', isUser: false }
+        ]);
+      } finally {
+        // Remove the "Gyani is thinking..." message
+        setMessages((prevMessages) =>
+          prevMessages.filter((message) => message.text !== 'Gyani is thinking...')
+        );
       }
     }
+  };
+
+  const formatMessage = (text: string) => {
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={index} className="font-bold text-lg">{part.slice(2, -2)}</strong>;
+      }
+      return <span key={index}>{part}</span>;
+    });
   };
 
   return (
@@ -70,7 +88,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className={`fixed inset-y-0 right-0 w-full md:w-96 shadow-lg ${
+          className={`fixed inset-y-0 right-0 w-full md:w-[500px] shadow-lg ${
             isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-900'
           }`}
         >
@@ -80,7 +98,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({
                 isDarkMode ? 'border-gray-700' : 'border-gray-200'
               }`}
             >
-              <h2 className="text-xl font-bold">Chatbot</h2>
+              <h2 className="text-xl text-center font-bold">Gyani AI</h2>
               <button
                 onClick={() => setIsOpen(false)}
                 className={`rounded-full p-2 transition-colors ${
@@ -110,7 +128,9 @@ export const Chatbot: React.FC<ChatbotProps> = ({
                         : 'bg-gray-200 text-gray-800'
                     }`}
                   >
-                    {message.text}
+                    <div className="whitespace-pre-wrap font-sans">
+                      {formatMessage(message.text)}
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -123,9 +143,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your message..."
-                  className={`flex-grow p-3 focus:outline-none ${
-                    isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'
-                  }`}
+                  className={`flex-grow p-3 focus:outline-none ${isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'}`}
                 />
                 <button
                   type="submit"

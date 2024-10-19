@@ -11,6 +11,7 @@ export const Blogs = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [filteredBlogs, setFilteredBlogs] = useState<Blog[]>([])
   const [isDarkMode, setIsDarkMode] = useState(true)
+  const isEdge = /Edg/.test(navigator.userAgent)
 
   useEffect(() => {
     const results = blogs.filter((blog : any) =>
@@ -61,13 +62,13 @@ export const Blogs = () => {
         </div>
 
         {loading ? (
-          <div className="space-y-8">
+          <div className={`space-y-8 w-full ${ isEdge ? 'w-full' : "md:w-[80%]"}  ${ isEdge ? '' : "md:ml-[10%]"}`}>
             {[...Array(5)].map((_, index) => (
               <BlogSkeletons key={index} isDarkMode={isDarkMode} />
             ))}
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-8 ">
             {filteredBlogs.length > 0 ? (
               filteredBlogs.map((blog) => (
                 <BlogCard
@@ -98,7 +99,7 @@ export const Blogs = () => {
 
 // Enhanced BlogSkeleton component
 export const BlogSkeletons = ({ isDarkMode }: { isDarkMode: boolean }) => (
-  <div className={`animate-pulse ${
+  <div className={`animate-pulse block w-[90%] md:ml-[5%] box-border ${
     isDarkMode ? 'bg-gray-800 bg-opacity-60' : 'bg-white bg-opacity-60'
   } rounded-2xl shadow-md p-6 backdrop-blur-sm`}>
     <div className="flex items-center space-x-4 mb-4">
