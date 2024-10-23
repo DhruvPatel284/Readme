@@ -14,11 +14,12 @@ datasource db {
 }
 
 model User {
-  id       Int   @id @default(autoincrement())
+  id          Int   @id @default(autoincrement())
   username    String   @unique
-  name     String?
-  password String
-  blogs    Blog[]
+  name        String?
+  password    String
+  avatar      String?
+  blogs       Blog[]
 }
 
 model Blog {

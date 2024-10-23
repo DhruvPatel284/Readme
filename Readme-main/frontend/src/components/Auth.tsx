@@ -30,6 +30,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       toast.dismiss()
       toast.success("Logged In!")
       const jwt = response.data
+      console.log("response :",response.data.token);
       localStorage.setItem("token", jwt)
       navigate("/blogs")
     } catch (e) {
@@ -42,7 +43,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       
       toast.loading("Authentication in progress")
       const response = await axios.post( `${BACKEND_URL}/api/v1/user/signin`, {
-          username: "kunj@gmail.com",
+          username: "dhruv@gmail.com",
           password: "123456",
         }
       );
@@ -51,7 +52,9 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       }
       toast.dismiss()
       toast.success("Logged In!")
-      const jwt = response.data
+      const jwt = response.data.token
+      console.log("response :",response.data.token);
+
       localStorage.setItem("token", jwt)
       navigate("/blogs")
     } catch (e) {

@@ -18,7 +18,7 @@ const app = new Hono<{
 }>();
 
 app.use('*', cors());
-app.post('/', async(c) => {
+app.post('/embed', async(c) => {
 
     try{
 

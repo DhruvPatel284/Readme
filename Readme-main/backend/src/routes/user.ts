@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { sign, verify } from 'hono/jwt';
 import { signupInput, signinInput } from "@dhruv156328/medium-common";
+import { v4 as uuidv4 } from "uuid";
+import AWS from "aws-sdk";
 export const userRouter = new Hono<{
 	Bindings: {
 		DATABASE_URL: string,
@@ -92,4 +94,6 @@ userRouter.post('/signup', async(c) => {
       return c.text("Invalid")
     }})
 
-    
+
+
+  

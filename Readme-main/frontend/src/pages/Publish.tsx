@@ -78,7 +78,6 @@ export const Publish: React.FC = () => {
           Authorization: localStorage.getItem('token')
         }
       })
-
       await axios.post(`${RAG_URL}/embed`, {
         title,
         content
