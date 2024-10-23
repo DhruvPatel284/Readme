@@ -52,7 +52,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       }
       toast.dismiss()
       toast.success("Logged In!")
-      const jwt = response.data.token
+      const jwt = response.data
       console.log("response :",response.data.token);
 
       localStorage.setItem("token", jwt)
