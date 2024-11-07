@@ -2,34 +2,222 @@
 @tailwind components;
 @tailwind utilities;
 
-.lexical h1 {
-    @apply block font-sans text-4xl font-semibold leading-[1.3] tracking-normal text-inherit antialiased;
+@layer utilities {
+    .text-gradient {
+      @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400;
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    .animate-glow {
+      animation: glow 3s ease-in-out infinite;
+    }
+    
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 5px theme('colors.violet.500'),
+                    0 0 20px theme('colors.violet.500'),
+                    0 0 30px theme('colors.violet.500');
+      }
+      50% {
+        box-shadow: 0 0 10px theme('colors.cyan.500'),
+                    0 0 30px theme('colors.cyan.500'),
+                    0 0 40px theme('colors.cyan.500');
+      }
+    }
+  
+    .animate-pulse-slow {
+      animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  
+    @keyframes pulse-slow {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+  
+    .animate-border {
+      animation: border-glow 3s ease-in-out infinite;
+    }
+  
+    @keyframes border-glow {
+      0%, 100% {
+        border-color: theme('colors.violet.500/30');
+      }
+      50% {
+        border-color: theme('colors.cyan.500/30');
+      }
+    }
   }
-   
-  .lexical h2 {
-    @apply block font-sans text-3xl font-semibold leading-snug tracking-normal text-inherit antialiased;
+  
+  .bg-mesh {
+    background-image: radial-gradient(at 45% 10%, rgb(90, 41, 106) 0px, transparent 50%),
+                      radial-gradient(at 80% 0%, rgba(129, 93, 163, 0.1) 0px, transparent 50%),
+                      radial-gradient(at 0% 50%, rgba(27, 13, 71, 0.537) 0px, transparent 50%);
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
   }
-   
-  .lexical p {
-    @apply block font-sans text-base font-normal leading-relaxed text-inherit antialiased;
+  
+  .glass-card {
+    @apply bg-gray-900/40 backdrop-blur-md border border-white/5 shadow-xl;
   }
-   
-  .lexical ul {
-    @apply list-inside list-disc;
+  
+  .neon-border {
+    @apply relative;
   }
-   
-  .lexical ol {
-    @apply list-inside list-decimal;
+  
+  .neon-border::before {
+    content: '';
+    @apply absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-500/20 to-cyan-500/20 -z-10 blur-xl opacity-50 transition-opacity duration-500;
   }
-   
-  .lexical li {
-    @apply font-sans text-base font-normal leading-relaxed text-inherit antialiased;
+  @layer utilities {
+    .text-gradient {
+      @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400;
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    .animate-glow {
+      animation: glow 3s ease-in-out infinite;
+    }
+    
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 5px theme('colors.violet.500'),
+                    0 0 20px theme('colors.violet.500'),
+                    0 0 30px theme('colors.violet.500');
+      }
+      50% {
+        box-shadow: 0 0 10px theme('colors.cyan.500'),
+                    0 0 30px theme('colors.cyan.500'),
+                    0 0 40px theme('colors.cyan.500');
+      }
+    }
+  
+    .animate-pulse-slow {
+      animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  
+    @keyframes pulse-slow {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+  
+    .animate-border {
+      animation: border-glow 3s ease-in-out infinite;
+    }
+  
+    @keyframes border-glow {
+      0%, 100% {
+        border-color: theme('colors.violet.500/30');
+      }
+      50% {
+        border-color: theme('colors.cyan.500/30');
+      }
+    }
+  
+    .animate-line {
+      animation: slide 15s linear infinite;
+    }
+  
+    @keyframes slide {
+      0% {
+        transform: translateX(-50%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
   }
-   
-  .lexical blockquote {
-    @apply block font-sans text-xl font-normal leading-relaxed text-inherit antialiased;
+  
+  .bg-mesh {
+    background-image: radial-gradient(at 45% 10%, rgb(90, 41, 106) 0px, transparent 50%),
+                      radial-gradient(at 80% 0%, rgba(129, 93, 163, 0.1) 0px, transparent 50%),
+                      radial-gradient(at 0% 50%, rgba(27, 13, 71, 0.537) 0px, transparent 50%);
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
   }
-   
-  .lexical code {
-    @apply rounded-md bg-gray-900/[0.1] px-1 py-0.5 text-sm font-normal text-gray-900;
+  
+  .glass-card {
+    @apply bg-gray-900/40 backdrop-blur-md border border-white/5 shadow-xl;
   }
+  
+  .neon-border {
+    @apply relative;
+  }
+  
+  .neon-border::before {
+    content: '';
+    @apply absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-500/20 to-cyan-500/20 -z-10 blur-xl opacity-50 transition-opacity duration-500;
+  }
+  
+  .bg-lines {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  
+  .bg-lines::before,
+  .bg-lines::after {
+    content: '';
+    position: absolute;
+    inset: -50% 0;
+    background-repeat: repeat;
+    opacity: 0.5;
+  }
+  
+  .bg-lines::before {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 1px,
+      theme('colors.violet.500') 1px,
+      theme('colors.violet.500') 2px
+    );
+    animation: slide 10s linear infinite;
+  }
+  
+  .bg-lines::after {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 1px,
+      theme('colors.cyan.500') 1px,
+      theme('colors.cyan.500') 2px
+    );
+    animation: slide 10s linear reverse infinite;
+  }
+  

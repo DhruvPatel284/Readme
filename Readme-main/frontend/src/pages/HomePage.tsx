@@ -1,126 +1,144 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Appbar } from '../components/Appbar';
-import { BookOpen, Github, Linkedin, Mail, MessageCircle } from 'lucide-react';
-import { jwtDecode } from 'jwt-decode';
-
+import { BookOpen, Github, Linkedin, Mail, MessageCircle, Sparkles, Brain, Users } from 'lucide-react';
 
 export const Homepage = () => {
   const navigate = useNavigate();
-
-  // Function to check if the user is signed in by looking for a JWT in localStorage
-  const isUserSignedIn = () => {
-    return localStorage.getItem('token') !== null;
-  };
-
-  const handleViewMoreClick = () => {
-    navigate('/blogs');
-  };
-
-  const handleLoginClick = () => {
-    navigate('/signin');
-  };
+  const isUserSignedIn = () => localStorage.getItem('token') !== null;
 
   return (
-    
-        <div className="min-h-screen bg-gradient-to-br from-gray-900  to-violet-900 text-gray-100">
-          <div className='shadow-md shadow-slate-600'>
-            <Appbar />
-          </div>
-          <main className="container mx-auto px-4 py-16">
-            <section className="text-center mb-16">
-              <h1 className="text-4xl md:text-5xl leading-tight md:leading-snug font-bold mb-4 text-transparent bg-gradient-to-r bg-clip-text from-blue-500 to-green-600">Welcome to Read-Me-Blog</h1>
-              <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-                Discover insightful articles and engage with our AI-powered chatbot for an enhanced learning experience.
-              </p>
-            </section>
+    <div className="min-h-screen bg-[#0a0a0f] text-gray-100 overflow-hidden">
+      <div className="bg-mesh relative">
+        <div className="bg-lines" />
+        <div className="backdrop-blur-sm bg-black/40 border-b border-white/5 relative z-50">
+          <Appbar />
+        </div>
+        
+        <main className="container mx-auto px-4 py-16 relative z-10">
+          {/* Hero Section */}
+          <section className="text-center mb-24 relative">
+            <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 via-cyan-500/5 to-transparent rounded-full blur-3xl -z-10 animate-pulse-slow" />
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-float">
+              <span className="text-gradient">Read-Me-Blog</span>
+            </h1>
+            <p className="text-xl text-gray-400/90 mb-8 max-w-2xl mx-auto transform hover:scale-105 transition-transform duration-300">
+              Discover insightful articles and engage with our AI-powered chatbot for an enhanced learning experience.
+            </p>
+          </section>
 
-            <section className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="bg-gray-800 border border-gray-700 hover:border-purple-500 transition-colors p-6 rounded-lg">
-                <div className="text-2xl flex items-center justify-center mb-4">
-                  <BookOpen className="mr-2 h-6 w-6 text-purple-500" />
-                  Blog
-                </div>
-                <p className="text-center text-gray-400 mb-6">
-                  Explore our collection of articles on various topics. Stay informed and inspired with our latest posts.
-                </p>
-                <div className="text-center">
-                  <Link to={ isUserSignedIn() ? '/blogs' : '/signin'} className="bg-purple-500 font-semibold text-black px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
-                    Visit Blog
-                  </Link>
+          {/* Features Grid */}
+          <section className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-24">
+            {[
+              {
+                title: "Blog",
+                icon: BookOpen,
+                description: "Explore our collection of articles on various topics. Stay informed and inspired with our latest posts.",
+                link: isUserSignedIn() ? '/blogs' : '/signin',
+                buttonText: "Visit Blog",
+                buttonIcon: Sparkles
+              },
+              {
+                title: "RAG Chatbot",
+                icon: MessageCircle,
+                description: "Interact with our AI-powered chatbot. Get answers to your questions and dive deeper into our content.",
+                link: { pathname: isUserSignedIn() ? '/blogs' : '/signin', search: '?isChatOpen=true' },
+                buttonText: "Start Chatting",
+                buttonIcon: Brain
+              }
+            ].map((feature, index) => (
+              <div key={index} className="group">
+                <div className="glass-card neon-border p-8 rounded-2xl transform transition-all duration-500 
+                              hover:scale-[1.02] hover:bg-gray-800/40 animate-border relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-cyan-500/5 opacity-0 
+                                group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="text-2xl flex items-center justify-center mb-6">
+                    <feature.icon className="mr-3 h-8 w-8 text-violet-400 group-hover:text-cyan-400 transition-colors duration-300 animate-float" />
+                    <span className="text-gradient font-bold">{feature.title}</span>
+                  </div>
+                  <p className="text-center text-gray-400/90 mb-8 group-hover:text-gray-300 transition-colors duration-300">
+                    {feature.description}
+                  </p>
+                  <div className="text-center">
+                    <Link to={feature.link}
+                          className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-violet-500 to-cyan-500 
+                                   text-white font-semibold transform transition-all duration-300 hover:scale-105 hover:shadow-lg
+                                   hover:shadow-violet-500/25 group">
+                      {feature.buttonText}
+                      <feature.buttonIcon className="ml-2 h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                    </Link>
+                  </div>
                 </div>
               </div>
+            ))}
+          </section>
 
-              <div className="bg-gray-800 border border-gray-700 hover:border-purple-500 transition-colors p-6 rounded-lg">
-                <div className="text-2xl flex items-center justify-center mb-4">
-                  <MessageCircle className="mr-2 h-6 w-6 text-purple-500" />
-                  RAG Chatbot
+          {/* Why Choose Us Section */}
+          <section className="mb-24 relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-transparent to-cyan-500/5 rounded-3xl blur-3xl -z-10 animate-pulse-slow" />
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gradient animate-float">
+              Why Choose Read-Me-Blog?
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {[
+                {
+                  title: "Insightful Content",
+                  description: "Curated articles on a wide range of topics to expand your knowledge.",
+                  icon: BookOpen
+                },
+                {
+                  title: "AI-Powered Assistance",
+                  description: "Get instant answers and dive deeper with our RAG-enhanced chatbot.",
+                  icon: Brain
+                },
+                {
+                  title: "User-Friendly Experience",
+                  description: "Elegant interface designed for easy navigation and readability.",
+                  icon: Users
+                }
+              ].map((feature, index) => (
+                <div key={index} className="group glass-card neon-border p-6 rounded-xl
+                                         transform transition-all duration-500 hover:scale-[1.02] hover:bg-gray-800/40">
+                  <feature.icon className="h-8 w-8 text-violet-400 group-hover:text-cyan-400 transition-colors duration-300 mb-4 mx-auto animate-float" />
+                  <h3 className="text-xl font-semibold mb-3 text-center group-hover:text-gradient transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400/90 text-center group-hover:text-gray-300 transition-colors duration-300">
+                    {feature.description}
+                  </p>
                 </div>
-                <p className="text-center text-gray-400 mb-6">
-                  Interact with our AI-powered chatbot. Get answers to your questions and dive deeper into our content.
-                </p>
-                <div className="text-center">
-                  <Link to= {{pathname: isUserSignedIn()  ? '/blogs' : '/signin',
-                        search: '?isChatOpen=true'}} 
-                       className="bg-purple-500 text-black font-semibold px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
-                    Start Chatting
-                  </Link>
-                </div>
+              ))}
+            </div>
+          </section>
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-white/5 mt-16 backdrop-blur-sm bg-black/40 relative z-10">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="mb-6 md:mb-0">
+                <Link to="/" className="text-2xl font-bold text-gradient">
+                  Read-Me-Blog
+                </Link>
+                <p className="text-sm text-gray-500 mt-2">© 2024 BlogRAG. All rights reserved.</p>
               </div>
-            </section>
-
-            <section className="mt-16 text-center">
-              <h2 className="text-2xl font-bold mb-4 leading-tight md:leading-snug  text-transparent bg-gradient-to-r bg-clip-text from-green-400 to-blue-600">Why Choose Read-Me-Blog?</h2>
-              <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Insightful Content</h3>
-                  <p className="text-gray-400">
-                    Curated articles on a wide range of topics to expand your knowledge.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">AI-Powered Assistance</h3>
-                  <p className="text-gray-400">
-                    Get instant answers and dive deeper with our RAG-enhanced chatbot.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">User-Friendly Experience</h3>
-                  <p className="text-gray-400">
-                    Elegant interface designed for easy navigation and readability.
-                  </p>
-                </div>
-              </div>
-            </section>
-          </main>
-
-          <footer className="border-t border-gray-800 mt-16">
-            <div className="container mx-auto px-4 py-6">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="mb-4 md:mb-0">
-                  <Link to="/" className="text-xl font-bold text-purple-500">
-                    Read-Me-Blog
+              <div className="flex space-x-6 items-center">
+                {[
+                  { icon: Github, url: "https://github.com/DhruvPatel284" },
+                  { icon: Linkedin, url: "https://www.linkedin.com/in/dhruvpatel156/" },
+                  { icon: Mail, url: "mailto:dhruv156328@gmail.com" }
+                ].map((social, index) => (
+                  <Link key={index} to={social.url} target="_blank"
+                        className="text-gray-400 hover:text-violet-400 transform transition-all duration-300 hover:scale-110">
+                    <social.icon size={24} className="hover:animate-float" />
                   </Link>
-                  <p className="text-sm text-gray-500 mt-1">© 2024 BlogRAG. All rights reserved.</p>
-                </div>
-                <div className="flex justify-evenly items-center w-[30%] md:w-[12%] mt-2 md:mt-0">
-                  <Link to={"https://github.com/kunj3740/"} target="_blank">
-                    <Github size={20} />
-                  </Link>
-                  <Link
-                    to={"https://www.linkedin.com/in/kunj-dave-b874302b1/"}
-                    target="_blank"
-                  >
-                    <Linkedin size={20} />
-                  </Link>
-                  <Link to={"mailto:kunjdave694@gmail.com"} target="_blank">
-                    <Mail size={20} />
-                  </Link>
-                </div>
+                ))}
               </div>
             </div>
-          </footer>
-        </div>
-   
+          </div>
+        </footer>
+      </div>
+    </div>
   );
-}; 
+};
+
 export default Homepage;
