@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import toast from 'react-hot-toast';
 import { PenSquare, User, LogOut, Sun, Moon } from 'lucide-react';
+import useContextedBlogs from '../context/theme';
+import { Blog } from '../hooks';
 
 interface MyToken {
   name: string;
@@ -29,11 +31,12 @@ export const Appbar = () => {
   const [username, setUsername] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(true);
   const navigate = useNavigate();
-
+  const [fetchedBlogs, setFetchedBlogs] = useState<Blog[]>([]); // Local state for blogs
+  const { blogs, getBlogs  , setLoading , getLoading } = useContextedBlogs();
+  const [ loading , setLoadings ] = useState<boolean>(getLoading());
   useEffect(() => {
     const getUser = () => {
       const token = localStorage.getItem('token');
-      console.log(token)
       if (token) {
         setIsLoggedIn(true);
         try {
@@ -55,6 +58,13 @@ export const Appbar = () => {
     // Save theme preference
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
+
+  useEffect(() => {
+    // Fetch blogs using the context's getBlogs method
+    const blogs = getBlogs();
+    setFetchedBlogs(blogs);
+
+  }, [getBlogs]);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -78,7 +88,7 @@ export const Appbar = () => {
 
   
   return (
-    <nav className={`${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'} p-4 w-full shadow-lg shadow-purple-800 transition-colors duration-300`}>
+    <nav className={`  ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gradient-to-br from-orange-100 via-rose-100 to-purple-100'} p-4 w-full shadow-lg shadow-purple-800 transition-colors duration-300`}>
       <div className="container mx-auto flex items-center justify-between">
         <Link to="/blogs" className={`text-xl font-semibold items-center ${isEdge ? 'ml-3' : 'ml-[5%]' } flex`}>
           <div className='h-[30px] mr-2'>
@@ -113,7 +123,7 @@ export const Appbar = () => {
                   <Avatar name={username} isDarkMode={isDarkMode} />
                 </button>
                 {dropdownVisible && (
-                  <div className={`absolute  right-0 mt-2 w-48 rounded-md shadow-lg ${
+                  <div className={`z-50 absolute  right-0 mt-2 w-48 rounded-md shadow-lg ${
                     isDarkMode ? 'bg-gray-800' : 'bg-white'
                   } ring-1 ring-black ring-opacity-5 transition-all duration-200 origin-top-right`}>
                     <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">

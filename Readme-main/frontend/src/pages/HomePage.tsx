@@ -10,15 +10,13 @@ export const Homepage = () => {
     <div className="min-h-screen bg-[#0a0a0f] text-gray-100 overflow-hidden">
       <div className="bg-mesh relative">
         <div className="bg-lines" />
-        <div className="backdrop-blur-sm bg-black/40 border-b border-white/5 relative z-50">
-          <Appbar />
-        </div>
+        
         
         <main className="container mx-auto px-4 py-16 relative z-10">
           {/* Hero Section */}
           <section className="text-center mb-24 relative">
             <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 via-cyan-500/5 to-transparent rounded-full blur-3xl -z-10 animate-pulse-slow" />
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-float">
+            <h1 className="text-3xl md:text-6xl font-bold mb-6 animate-float">
               <span className="text-gradient">Read-Me-Blog</span>
             </h1>
             <p className="text-xl text-gray-400/90 mb-8 max-w-2xl mx-auto transform hover:scale-105 transition-transform duration-300">
@@ -123,9 +121,9 @@ export const Homepage = () => {
               </div>
               <div className="flex space-x-6 items-center">
                 {[
-                  { icon: Github, url: "https://github.com/DhruvPatel284" },
-                  { icon: Linkedin, url: "https://www.linkedin.com/in/dhruvpatel156/" },
-                  { icon: Mail, url: "mailto:dhruv156328@gmail.com" }
+                  { icon: Github, url: "https://github.com/kunj3740/" },
+                  { icon: Linkedin, url: "https://www.linkedin.com/in/kunj-dave-b874302b1/" },
+                  { icon: Mail, url: "mailto:kunjdave694@gmail.com" }
                 ].map((social, index) => (
                   <Link key={index} to={social.url} target="_blank"
                         className="text-gray-400 hover:text-violet-400 transform transition-all duration-300 hover:scale-110">

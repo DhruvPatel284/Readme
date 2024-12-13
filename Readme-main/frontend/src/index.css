@@ -1,3 +1,5 @@
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -161,9 +163,12 @@
   }
   
   .bg-mesh {
-    background-image: radial-gradient(at 45% 10%, rgb(90, 41, 106) 0px, transparent 50%),
-                      radial-gradient(at 80% 0%, rgba(129, 93, 163, 0.1) 0px, transparent 50%),
-                      radial-gradient(at 0% 50%, rgba(27, 13, 71, 0.537) 0px, transparent 50%);
+    background-color: #030014;
+    background-image: 
+      radial-gradient(at 40% 20%, rgba(192, 132, 252, 0.15) 0px, transparent 30%),
+      radial-gradient(at 80% 0%, rgba(129, 140, 248, 0.15) 0px, transparent 40%),
+      radial-gradient(at 0% 50%, rgba(167, 139, 250, 0.15) 0px, transparent 35%),
+      radial-gradient(at 80% 50%, rgba(192, 132, 252, 0.15) 0px, transparent 45%);
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -180,44 +185,5 @@
   .neon-border::before {
     content: '';
     @apply absolute inset-0 rounded-2xl bg-gradient-to-r from-violet-500/20 to-cyan-500/20 -z-10 blur-xl opacity-50 transition-opacity duration-500;
-  }
-  
-  .bg-lines {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    opacity: 0.1;
-    pointer-events: none;
-  }
-  
-  .bg-lines::before,
-  .bg-lines::after {
-    content: '';
-    position: absolute;
-    inset: -50% 0;
-    background-repeat: repeat;
-    opacity: 0.5;
-  }
-  
-  .bg-lines::before {
-    background-image: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 1px,
-      theme('colors.violet.500') 1px,
-      theme('colors.violet.500') 2px
-    );
-    animation: slide 10s linear infinite;
-  }
-  
-  .bg-lines::after {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 1px,
-      theme('colors.cyan.500') 1px,
-      theme('colors.cyan.500') 2px
-    );
-    animation: slide 10s linear reverse infinite;
   }
   

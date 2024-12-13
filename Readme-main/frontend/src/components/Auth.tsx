@@ -1,5 +1,3 @@
-'use client'
-
 import { ChangeEvent, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { BACKEND_URL } from "../config"
@@ -7,7 +5,8 @@ import axios from "axios"
 import { SignupInput } from "@dhruv156328/medium-common"
 import { Toaster, toast } from "react-hot-toast"
 import { motion } from "framer-motion"
-import { LockIcon, MailIcon, UserIcon } from "lucide-react"
+import { LockIcon, MailIcon, UserIcon } from 'lucide-react'
+import { GoogleLogin } from '@react-oauth/google'
 
 export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   const navigate = useNavigate()
@@ -30,7 +29,6 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       toast.dismiss()
       toast.success("Logged In!")
       const jwt = response.data
-      console.log("response :",response.data.token);
       localStorage.setItem("token", jwt)
       navigate("/blogs")
     } catch (e) {
@@ -38,9 +36,9 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       toast.error("Error while logging in!")
     }
   }
+
   async function LoginAsGuest() {
     try {
-      
       toast.loading("Authentication in progress")
       const response = await axios.post( `${BACKEND_URL}/api/v1/user/signin`, {
           username: "dhruv@gmail.com",
@@ -53,8 +51,6 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       toast.dismiss()
       toast.success("Logged In!")
       const jwt = response.data
-      console.log("response :",response.data.token);
-
       localStorage.setItem("token", jwt)
       navigate("/blogs")
     } catch (e) {
@@ -62,6 +58,32 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
       toast.error("Error while logging in!")
     }
   }
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    try {
+      toast.loading("Google Authentication in progress")
+      // Send the Google token to your backend for verification and user creation/login
+      const response = await axios.post(`${BACKEND_URL}/api/v1/user/google-auth`, {
+        token: credentialResponse.credential,
+      })
+      if (!response) {
+        toast.error("Error while logging in with Google!")
+      }
+      toast.dismiss()
+      toast.success("Logged In with Google!")
+      const jwt = response.data.token;
+      localStorage.setItem("token", jwt)
+      navigate("/blogs")
+    } catch (e) {
+      toast.dismiss()
+      toast.error("Error while logging in with Google!")
+    }
+  }
+
+  const handleGoogleError = () => {
+    toast.error("Google sign-in was unsuccessful. Please try again.")
+  }
+
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-purple-700 to-indigo-900">
       <motion.div
@@ -139,6 +161,21 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
           >
             Login as Guest
           </motion.button>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-800">Or continue with</span>
+            </div>
+          </div>
+          <div className="mt-6 border-2 border-purple-600 rounded-md shadow-lg">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              useOneTap
+            />
+          </div>
         </div>
       </motion.div>
     </div>

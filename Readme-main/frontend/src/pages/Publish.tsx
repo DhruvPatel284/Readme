@@ -1,12 +1,34 @@
-'use client'
-
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Toaster, toast } from 'react-hot-toast'
 import { BACKEND_URL, RAG_URL } from '../config'
 import { Appbar } from '../components/Appbar'
+import { GrammarCorrection } from '../components/ui/GrammarCorrection'
+import { motion, AnimatePresence } from 'framer-motion'
+import Confetti from 'react-confetti'
+import useContextedBlogs from '../context/theme'
 
+// Grammar correction function (using OpenAI as an example)
+const correctText = async (text: string) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(
+      `${RAG_URL}/grammar-correction`,
+      { text },
+      {
+        headers: {
+          Authorization: `${token}`, // Add Bearer token
+        },
+      }
+    );
+    return response.data.correctedText
+  } catch (error) {
+    console.error('Error correcting text:', error)
+    toast.error('Failed to correct text')
+    return text
+  }
+}
 
 // Custom Button Component
 const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'outline' }> = ({ 
@@ -17,7 +39,7 @@ const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement> & { variant
 }) => {
   const baseStyle = 'px-4 py-2 rounded-md font-semibold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500'
   const variantStyle = variant === 'primary' 
-    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700' 
+    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-black hover:from-purple-700 hover:to-blue-700' 
     : 'border border-purple-500 text-purple-500 hover:bg-purple-100'
 
   return (
@@ -47,55 +69,90 @@ const Textarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = ({
   )
 }
 
-// Icon components
-const BoldIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/></svg>
-
-const ItalicIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
-
-const ListIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-
-const ImageIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-
 export const Publish: React.FC = () => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [isPublishing, setIsPublishing] = useState(false)
-  const navigate = useNavigate()
-
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isCorrecting, setIsCorrecting] = useState(false);
+  const [showCorrectionEffect, setShowCorrectionEffect] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const navigate = useNavigate();
+  const { setLoading , loading } = useContextedBlogs();
   const handlePublish = useCallback(async () => {
     if (!title.trim() || !content.trim()) {
-      toast.error('Please fill in both title and content')
-      return
+      toast.error('Please fill in both title and content');
+      return;
     }
 
-    setIsPublishing(true)
+    setIsPublishing(true);
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/blog`, {
         title,
-        content
+        content,
       }, {
         headers: {
-          Authorization: localStorage.getItem('token')
+          Authorization: localStorage.getItem('token'),
         }
-      })
+      });
+
       await axios.post(`${RAG_URL}/embed`, {
         title,
-        content
-      })
-
-      toast.success('Blog Published Successfully!')
-      navigate(`/blog/${response.data.id}`)
+        content,
+      });
+      setLoading(!loading);
+      toast.success('Blog Published Successfully!');
+      // window.location.href = `/blog/${response.data.id}`
+      navigate(`/blog/${response.data.id}?Published=true`);
     } catch (error) {
+      console.error('Error publishing blog:', error);
+      toast.error('Failed to publish blog');
     } finally {
-      setIsPublishing(false)
+      setIsPublishing(false);
     }
-  }, [title, content, navigate])
+  }, [title, content, navigate]);
 
-  const wordCount = content.trim().split(/\s+/).length
+  const handleCorrection = useCallback(async () => {
+    if (!content.trim()) {
+      toast.error('Please write some content to correct');
+      return;
+    }
+
+    setIsCorrecting(true);
+    try {
+      const correctedText = await correctText(content);
+      setContent(correctedText);
+      setShowCorrectionEffect(true);
+      setShowConfetti(true);
+      toast.success('Content corrected successfully!');
+    } catch (error) {
+      console.error('Error correcting content:', error);
+    } finally {
+      setIsCorrecting(false);
+    }
+  }, [content]);
+
+  useEffect(() => {
+    if (showCorrectionEffect) {
+      const timer = setTimeout(() => {
+        setShowCorrectionEffect(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [showCorrectionEffect]);
+
+  useEffect(() => {
+    if (showConfetti) {
+      const timer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
+
+  const wordCount = content.trim().split(/\s+/).length;
 
   return (
-    <div className="min-h-screen transition-colors duration-300  bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800">
-      <Appbar />
+    <div className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-gray-900 via-purple-900 to-violet-800">
       <div className="container mx-auto px-4 py-8">
         <div className="w-full max-w-4xl mx-auto bg-black/50 backdrop-blur-md shadow-xl rounded-lg overflow-hidden">
           <div className="p-6">
@@ -110,13 +167,25 @@ export const Publish: React.FC = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 className="text-xl font-bold"
               />
-              <div className="space-y-2">
-                <Textarea
-                    placeholder="Write your blog content here..."
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    rows={10}
+              <div className="relative">
+                <AnimatePresence>
+                  {showCorrectionEffect && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute inset-0 bg-green-500/20 rounded-md pointer-events-none"
                     />
+                  )}
+                </AnimatePresence>
+                <Textarea
+                  placeholder="Write your blog content here..."
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  rows={10}
+                  className={`transition-all duration-300 ${showCorrectionEffect ? 'ring-2 ring-green-500' : ''}`}
+                />
               </div>
               <div className="flex justify-between items-center text-sm text-purple-300">
                 <span>{wordCount} words</span>
@@ -124,17 +193,32 @@ export const Publish: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="bg-black/30 px-6 py-4 flex justify-between items-center">
-            
-            <Button
-              onClick={handlePublish}
-              disabled={isPublishing}
-            >
-              {isPublishing ? 'Publishing...' : 'Publish Post'}
-            </Button>
-          </div>
+          <div className="bg-black/30 px-4 sm:px-6 py-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center sm:justify-between">
+                <GrammarCorrection 
+                  onCorrect={handleCorrection}
+                  isLoading={isCorrecting}
+                />
+                <Button 
+                  onClick={handlePublish} 
+                  disabled={isPublishing}
+                  className="w-full sm:w-auto"
+                >
+                  {isPublishing ? 'Publishing...' : 'Publish Post'}
+                </Button>
+              </div>
+            </div>
         </div>
       </div>
+      {showConfetti && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          recycle={false}
+          numberOfPieces={200}
+          gravity={0.2}
+        />
+      )}
     </div>
-  )
-}
+  );
+};
