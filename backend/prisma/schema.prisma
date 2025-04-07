@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  name         String?
+  password     String
+  blogs        Blog[]
+  isAdmin      Boolean  @default(false)
+  isBlocked    Boolean  @default(false)
+  reports      Report[] // Reports submitted by this user
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Blog {
+  id            Int       @id @default(autoincrement())
+  title         String
+  content       String
+  published     Boolean   @default(false)
+  author        User      @relation(fields: [authorId], references: [id])
+  authorId      Int
+  publishedDate DateTime  @default(now())
+  category      Category  @relation(fields: [categoryId], references: [id])
+  categoryId    Int
+  reports       Report[]
+  updatedAt     DateTime  @updatedAt
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  blogs Blog[]
+}
+
+model Report {
+  id        Int      @id @default(autoincrement())
+  reason    String
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  blogId    Int
+  reporter  User     @relation(fields: [reporterId], references: [id])
+  reporterId Int
+  status    ReportStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+  DISMISSED
+}
+

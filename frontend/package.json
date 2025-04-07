@@ -1,0 +1,61 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@dhruv156328/medium-common": "^1.0.0",
+    "@huggingface/inference": "^2.8.0",
+    "@lexical/react": "^0.18.0",
+    "@material-tailwind/react": "^2.1.10",
+    "@react-oauth/google": "^0.12.1",
+    "@splinetool/react-spline": "^4.0.0",
+    "@tinymce/tinymce-react": "^6.0.0",
+    "axios": "^1.6.8",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.11.8",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
+    "langchain": "^0.3.2",
+    "lexical": "^0.18.0",
+    "lodash": "^4.17.21",
+    "lucide-react": "^0.451.0",
+    "mini-svg-data-uri": "^1.4.4",
+    "react": "^18.2.0",
+    "react-confetti": "^6.1.0",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-oauth": "^0.0.1",
+    "react-router-dom": "^6.22.3",
+    "simplex-noise": "^4.0.3",
+    "swr": "^2.2.5",
+    "tiptap": "^1.32.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/lodash": "^4.17.9",
+    "@types/node": "^22.7.5",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
