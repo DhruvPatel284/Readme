@@ -20,6 +20,45 @@ const app = new Hono<{
 }>();
 
 app.use('*', cors());
+app.get('/health', async (c) => {
+  try {
+    const sbApiKey = c.env.SUPABASE_API_KEY ?? "";
+    const sbUrl = c.env.SUPABASE_URL ?? "";
+
+    // Create Supabase client
+    const client = createClient(sbUrl, sbApiKey);
+
+    // Try to fetch a single row from the documents table
+    const { data, error } = await client
+      .from('documents')
+      .select('*')
+      .limit(1);
+
+    if (error) {
+      console.error('Database health check failed:', error);
+      return c.json({
+        status: 'unhealthy',
+        database: 'down',
+        error: error.message
+      }, 503);
+    }
+
+    return c.json({
+      status: 'healthy',
+      database: 'up',
+      message: 'Database connection successful',
+      recordsFound: data?.length || 0
+    }, 200);
+
+  } catch (e) {
+    console.error('Health check error:', e);
+    return c.json({
+      status: 'unhealthy',
+      database: 'down',
+      error: 'Failed to connect to database'
+    }, 503);
+  }
+});
 app.post('/embed', async(c) => {
 
     try{

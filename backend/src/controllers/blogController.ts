@@ -16,7 +16,7 @@ interface Blog {
 }
 
 // ✅ Fix: Pass `env.DATABASE_URL` explicitly
-const getPrisma = (env: any) => {
+export const getPrisma = (env: any) => {
   return new PrismaClient({ datasourceUrl: env.DATABASE_URL }).$extends(
     withAccelerate()
   );
